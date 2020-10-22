@@ -1,0 +1,47 @@
+---
+
+# ------------------------------------------------------------------------------
+# General Properties
+# ------------------------------------------------------------------------------
+id: "snowflake"                        # Unique identifier of the target
+name: "Snowflake"                      # Name of the target
+type: "target-snowflake"               # !! THIS SHOULD NOT CHANGE !!
+
+
+# ------------------------------------------------------------------------------
+# Target - Data Warehouse connection details
+# ------------------------------------------------------------------------------
+db_conn:
+  account: "rtxxxxx.eu-central-1"               # Snowflake account
+  dbname: "<DB_NAME>"                           # Snowflake database name
+  user: "<USER>"                                # Snowflake user
+  password: "<PASSWORD>"                        # Plain string or vault encrypted
+  warehouse: "<WAREHOUSE>"                      # Snowflake virtual warehouse
+
+  # We use an external stage on S3 to load data into Snowflake
+  # S3 Profile based authentication
+  aws_profile: "<AWS_PROFILE>"                  # AWS profile name, if not provided, the AWS_PROFILE environment variable or the 'default' profile will be used
+
+  # S3 Non-profile based authentication
+  #aws_access_key_id: "<ACCESS_KEY>"            # Plain string or vault encrypted. Required for non-profile based auth. If not provided, AWS_ACCESS_KEY_ID environment variable will be used.
+  #aws_secret_access_key: "<SECRET_ACCESS_KEY"  # Plain string or vault encrypted. Required for non-profile based auth. If not provided, AWS_SECRET_ACCESS_KEY environment variable will be used.
+  #aws_session_token: "<AWS_SESSION_TOKEN>"     # Optional: Plain string or vault encrypted. If not provided, AWS_SESSION_TOKEN environment variable will be used.
+
+  #aws_endpoint_url: "<FULL_ENDPOINT_URL>"      # Optional: for non AWS S3, for example https://nyc3.digitaloceanspaces.com
+
+  s3_bucket: "<BUCKET_NAME>"                    # S3 external stbucket name
+  s3_key_prefix: "snowflake-imports/"           # Optional: S3 key prefix
+  #s3_acl: "<S3_OBJECT_ACL>"                    # Optional: Assign the canned ACL to the uploaded file on S3
+
+  # stage and file_format are pre-created objects in Snowflake that requires to load and
+  # merge data correctly from S3 to tables in one step without using temp tables
+  #  stage      : External stage object pointing to an S3 bucket
+  #  file_format: Named file format object used for bulk loading data from S3 into
+  #               snowflake tables.
+  stage: "pipelinewise.encrypted_etl_stage"
+  file_format: "pipelinewise.etl_stage_file_format"
+  
+  # Optional: Client Side Encryption
+  # The same master key has to be added to the external stage object created in snowflake
+  #client_side_encryption_master_key: "<MASTER_KEY"> # Plain string or vault encrypted
+
